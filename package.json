@@ -1,0 +1,20 @@
+{
+  "name": "lustra-text-bot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test lib/*.test.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@vercel/node": "^3.2.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  }
+}

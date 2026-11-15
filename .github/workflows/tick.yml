@@ -1,0 +1,31 @@
+name: Text bot scheduler
+
+# Every 10 minutes: sends due first texts and nudges (only inside sending
+# hours, within the daily cap) and closes out leads past their window.
+# Needs the repo variable BOT_URL (e.g. https://your-app.vercel.app) and the
+# repo secret WEBHOOK_SECRET (same value as in Vercel).
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: text-bot-tick
+  cancel-in-progress: false
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Run the bot's scheduled step
+        env:
+          BOT_URL: ${{ vars.BOT_URL }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+        run: |
+          if [ -z "$BOT_URL" ] || [ -z "$WEBHOOK_SECRET" ]; then
+            echo "BOT_URL variable or WEBHOOK_SECRET secret not set yet; skipping."
+            exit 0
+          fi
+          curl --fail-with-body -sS -X POST -H "x-bot-secret: $WEBHOOK_SECRET" "$BOT_URL/api/tick"
+
